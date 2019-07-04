@@ -20,3 +20,4 @@ class ArticleItem(scrapy.Item):
     like_count = scrapy.Field()
     word_count = scrapy.Field() # 文章字数
     subjects = scrapy.Field() # 专题
+    comment_count = scrapy.Field()

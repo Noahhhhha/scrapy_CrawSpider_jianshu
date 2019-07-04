@@ -28,7 +28,7 @@ class JianshuTwistedPipeline(object):
     def sql(self):
         if not self._sql:
             self._sql = '''
-                insert into article(id,title,content,author,avatar,pub_time,origin_url,article_id) values (null,%s,%s,%s,%s,%s,%s,%s)
+                insert into article(id,title,content,author,avatar,pub_time,origin_url,article_id,read_count,like_count,word_count,subjects,comment_count) values (null,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
              '''
             return self._sql
         return self._sql
@@ -38,7 +38,7 @@ class JianshuTwistedPipeline(object):
         defer.addErrback(self.handle_error,item,spider)
 
     def insert_item(self,cursor,item): # 执行插入操作
-        cursor.execute(self.sql,(item['title'],item['content'],item['author'],item['avatar'],item['pub_time'],item['origin_url'],item['article_id']))
+        cursor.execute(self.sql,(item['title'],item['content'],item['author'],item['avatar'],item['pub_time'],item['origin_url'],item['article_id'],item['read_count'],item['like_count'],item['word_count'],item['subjects'],item['comment_count']))
 
     def handle_error(self,error,item,spider): #异常处理
         print('=' * 10 + "error" + '=' * 10)

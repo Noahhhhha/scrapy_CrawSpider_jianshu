@@ -3,6 +3,7 @@ import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from jianshu_spider.items import ArticleItem
+import re
 
 class JsSpider(CrawlSpider):
     name = 'js'
@@ -24,6 +25,12 @@ class JsSpider(CrawlSpider):
         # 内容中包含了布局标签
         content = response.xpath("//div[@class='show-content']").get()
 
+        word_count = int(re.findall(r"\d+",response.xpath("//span[@class='wordage']/text()").get())[0]) # 这里不加int转也可以，会自动转
+        comment_count = re.findall(r"\d+",response.xpath("//span[@class='comments-count']/text()").get())[0]
+        read_count = re.findall(r"\d+",response.xpath("//span[@class='views-count']/text()").get())[0]
+        like_count = re.findall(r"\d+",response.xpath("//span[@class='likes-count']/text()").get())[0]
+        subjects = ",".join(response.xpath("//div[@class='include-collection']/a/div/text()").getall())
+
         item = ArticleItem(
             title = title,
             avatar = avatar,
@@ -31,7 +38,12 @@ class JsSpider(CrawlSpider):
             pub_time = pub_time,
             origin_url = response.url,
             article_id = article_id,
-            content = content
+            content = content,
+            subjects = subjects,
+            word_count = word_count,
+            comment_count = comment_count,
+            read_count = read_count,
+            like_count = like_count
         )
 
         yield item
